@@ -9,7 +9,9 @@ module.exports = {
         accent: "#EB6440",
         primary: "#EFF5F5",
         secondary: "#D6E4E5",
-        sub: "#497174"
+        sub: "#497174",
+        red: "#EB4034",
+        green: "#34eb5f"
       },
       fontFamily: {
         nunito: ["Nunito Sans", "sans-serif"]

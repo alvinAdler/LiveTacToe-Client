@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom'
-
 import WaveFooter from '../../assets/footer-wave.svg'
 
 import MenuCard from "./MenuCard"
@@ -21,7 +19,6 @@ const Landing = () => {
           <div className="flex flex-col gap-4">
             <MenuCard title="Join a Room" submitText="Join" onSubmit={handleJoinRoom}/>
             <MenuCard title="Create a Room" submitText="Create" onSubmit={handleCreateRoom}/>
-            <Link to="/game">Game</Link>
           </div>
         </div>
         <img className='w-screen absolute bottom-0 -z-1' src={WaveFooter} alt="Wave" />
