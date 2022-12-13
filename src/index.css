@@ -9,6 +9,7 @@
   --color-primary: 239, 245, 245;
   --color-secondary: 214, 228, 229;
   --color-sub: 73, 113, 116;
+  --color-accent-invert: 20, 155, 191;
 }
 
 *, *::before, *::after{

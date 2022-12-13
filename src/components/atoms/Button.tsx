@@ -16,4 +16,13 @@ const Button = styled.button`
   }
 `
 
+export const ButtonInvert = styled(Button)`
+  background-color: rgb(var(--color-accent-invert));
+
+  &:hover, &:focus{
+    background-color: rgb(var(--color-accent-invert), 0.7);
+    border-color: rgb(var(--color-accent-invert))
+  }
+`
+
 export default Button
