@@ -4,15 +4,17 @@ import { CircularProgress } from "@mui/material"
 import WinIcon  from '../../assets/win-icon.svg'
 import LoseIcon  from '../../assets/lose-icon.svg'
 
+import { winnerChecker } from "../../utils/utilityFunctions"
+
 import { PlayerPiece } from "./Gameboard"
 import GameBoard from "./Gameboard"
 import Modal from "../../components/Modal"
 import Button, { ButtonInvert } from "../../components/atoms/Button"
 
 const SAMPLE_BOARD_DATA: PlayerPiece[] = [
-  "X", "O", "O", 
-  "X", "X", "O", 
-  "X", "O", "O"
+  "O", "O", "X", 
+  "O", "O", "X", 
+  "X", "X", "O"
 ]
 
 const Game = () => {
