@@ -1,25 +1,39 @@
-import { FC, useState } from "react"
+import { FC, useState, useEffect } from "react"
 import { CircularProgress } from "@mui/material"
+import { useSelector, useDispatch } from 'react-redux'
 
 import WinIcon  from '../../assets/win-icon.svg'
 import LoseIcon  from '../../assets/lose-icon.svg'
 
+import { RootState } from "../../store"
 import { winnerChecker } from "../../utils/utilityFunctions"
+import { placeBoardPiece, setDisableClick } from "./slices/gameSlice"
 
 import { PlayerPiece } from "./Gameboard"
 import GameBoard from "./Gameboard"
 import Modal from "../../components/Modal"
 import Button, { ButtonInvert } from "../../components/atoms/Button"
 
-const SAMPLE_BOARD_DATA: PlayerPiece[] = [
-  "O", "O", "X", 
-  "O", "O", "X", 
-  "X", "X", "O"
-]
-
 const Game = () => {
 
+  const gameBoard = useSelector((state: RootState) => state.game.board)
+  const dispatch = useDispatch()
+
   const [showModal, setShowModal] = useState(true)
+
+  useEffect(() => {
+    const checkResult = winnerChecker(gameBoard)
+
+    if(checkResult === undefined) return
+
+    dispatch(setDisableClick(true))
+    console.log(`The winner is ${checkResult}`)
+
+  }, [gameBoard])
+
+  const handleCellClick = (targetedIndex: number, piece: PlayerPiece) => {
+    dispatch(placeBoardPiece({piece: piece, index: targetedIndex}))
+  }
 
   return (
     <div className="w-full h-full flex flex-col py-8">
@@ -28,7 +42,7 @@ const Game = () => {
         <p className="text-sub text-center">Your room ID: 7123hjf</p>
       </header>
       <div className="w-full mt-12">
-        <GameBoard boardData={SAMPLE_BOARD_DATA}/>
+        <GameBoard boardData={gameBoard} onCellClick={handleCellClick}/>
       </div>
     </div>
   )
