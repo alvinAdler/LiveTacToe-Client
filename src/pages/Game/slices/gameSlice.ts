@@ -17,13 +17,19 @@ const SAMPLE_BOARD_DATA: PlayerPiece[] = [
 interface InitialStateType{
   board: PlayerPiece[],
   playerPiece: PlayerPiece,
-  disableClick: boolean
+  disableClick: boolean,
+  currentRoomId: string | null,
+  playerName: PlayerRole | ""
 }
+
+type PlayerRole = "player1" | "player2"
 
 const INITIAL_STATE: InitialStateType = {
   board: SAMPLE_BOARD_DATA,
   playerPiece: "O",
-  disableClick: false
+  disableClick: false,
+  currentRoomId: null,
+  playerName: ""
 }
 
 const GameSlice = createSlice({
@@ -46,6 +52,9 @@ const GameSlice = createSlice({
 
       state.playerPiece = action.payload
     },
+    setPlayerName: (state, action: PayloadAction<PlayerRole>) => {
+      state.playerName = action.payload
+    },
     setDisableClick: (state, action: PayloadAction<boolean | undefined>) => {
       if(action.payload !== undefined){
         state.disableClick = action.payload
@@ -53,9 +62,12 @@ const GameSlice = createSlice({
       }
 
       state.disableClick = !state.disableClick
+    },
+    setRoomId: (state, action: PayloadAction<string>) => {
+      state.currentRoomId = action.payload
     }
   }
 })
 
-export const { placeBoardPiece, setPlayerPiece, setDisableClick } = GameSlice.actions
+export const { placeBoardPiece, setPlayerPiece, setDisableClick, setRoomId, setPlayerName } = GameSlice.actions
 export default GameSlice.reducer

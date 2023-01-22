@@ -12,14 +12,15 @@ interface ModalChildrenComps{
 export interface ModalProps{
   isVisible: boolean,
   children: ReactNode,
-  onClose: () => void
+  onClose?: () => void,
+  closeable?: boolean;
 }
 
-const Modal: FC<ModalProps> & ModalChildrenComps = ({ isVisible, children, onClose }) => {
+const Modal: FC<ModalProps> & ModalChildrenComps = ({ isVisible, children, onClose, closeable=true }) => {
   return (
     <>
     {isVisible &&
-      <div className='w-screen h-screen fixed inset-0 bg-black-200 flex justify-center items-center z-50' onClick={() => onClose()}>
+      <div className='w-screen h-screen fixed inset-0 bg-black-200 flex justify-center items-center z-50' onClick={() => (onClose && closeable) && onClose()}>
         <div className='bg-primary rounded-lg w-[80%] max-w-[28rem] min-h-[20rem] p-4 flex items-stretch' onClick={(ev) => ev.stopPropagation()}>
           {children}
         </div>
@@ -42,10 +43,10 @@ interface ModalDefaultContentProps{
 
 const ModalDefaultContent: FC<ModalDefaultContentProps> = (props) => {
 
-  const { icon, title, desc, buttonConfirmText="Ok", buttonCancelText="Cancel", onConfirm, onCancel, showButtonCancel } = props
+  const { icon, title, desc, buttonConfirmText="Ok", buttonCancelText="Cancel", onConfirm, onCancel, showButtonCancel=false } = props
 
   return(
-    <div className='flex flex-col items-center justify-around text-center p-2 text-sub'>
+    <div className='w-full flex flex-col items-center justify-around text-center p-2 text-sub'>
       <h2 className='text-2xl font-bold textsub-'>{title}</h2>
       <ModalIcon iconType={icon}/>
       <p>{desc}</p>

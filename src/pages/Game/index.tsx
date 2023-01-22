@@ -1,6 +1,7 @@
-import { FC, useState, useEffect } from "react"
+import { FC, useState, useEffect, useContext } from "react"
 import { CircularProgress } from "@mui/material"
 import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate, useLocation } from "react-router-dom"
 
 import WinIcon  from '../../assets/win-icon.svg'
 import LoseIcon  from '../../assets/lose-icon.svg'
@@ -8,18 +9,45 @@ import LoseIcon  from '../../assets/lose-icon.svg'
 import { RootState } from "../../store"
 import { winnerChecker } from "../../utils/utilityFunctions"
 import { placeBoardPiece, setDisableClick } from "./slices/gameSlice"
+import { listOfServerEvents } from "../../utils/socketContext"
+import SocketContext from "../../utils/socketContext"
 
 import { PlayerPiece } from "./Gameboard"
 import GameBoard from "./Gameboard"
 import Modal from "../../components/Modal"
 import Button, { ButtonInvert } from "../../components/atoms/Button"
 
+export interface GameNavigationStateInterface{
+  condition: "create" | "join"
+}
+
 const Game = () => {
 
-  const gameBoard = useSelector((state: RootState) => state.game.board)
-  const dispatch = useDispatch()
+  const socket = useContext(SocketContext)
 
-  const [showModal, setShowModal] = useState(true)
+  const {board: gameBoard, currentRoomId} = useSelector((state: RootState) => state.game)
+
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const { condition } = location.state as GameNavigationStateInterface
+
+  const [isWaitingModalVisible, setIsWaitingModalVisible] = useState(condition === "create")
+
+  useEffect(() => {
+
+    socket?.on("roomStatus", ({ message, isSomeoneJoin }) => {
+      console.log(message)
+      if(isSomeoneJoin){
+        setIsWaitingModalVisible(false)
+      }
+    })
+
+    return () => {
+      socket?.off("roomStatus")
+    }
+  }, [])
 
   useEffect(() => {
     const checkResult = winnerChecker(gameBoard)
@@ -39,11 +67,22 @@ const Game = () => {
     <div className="w-full h-full flex flex-col py-8">
       <header className="flex flex-col gap-2 items-center justify-center">
         <h1 className="text-4xl font-bold text-center text-sub">Game Board</h1>
-        <p className="text-sub text-center">Your room ID: 7123hjf</p>
+        <p className="text-sub text-center">Your room ID: <span className="font-mono font-bold">{currentRoomId}</span></p>
       </header>
       <div className="w-full mt-12">
         <GameBoard boardData={gameBoard} onCellClick={handleCellClick}/>
       </div>
+      <Modal isVisible={!currentRoomId} onClose={() => navigate("/")}>
+        <Modal.Default 
+          icon="ERROR" 
+          title="Error!" 
+          desc="Please create or join a game in a proper way"
+          onConfirm={() => navigate("/")}
+        />
+      </Modal>
+      <Modal isVisible={isWaitingModalVisible} closeable={false}>
+        <WaitingModalContent/>
+      </Modal>
     </div>
   )
 }

@@ -6,7 +6,7 @@ import TextInput from '../../components/atoms/TextInput';
 export interface MenuCardProps{
   title: string;
   submitText: string;
-  onSubmit: (inputValue: string | undefined) => void;
+  onSubmit: (inputValue: string) => void;
   messageOnEmpty?: string;
   placeholder?: string;
 }
@@ -17,11 +17,11 @@ const MenuCard: FC<MenuCardProps> = ({ title, submitText, onSubmit, placeholder=
 
   const handleSubmit = (ev: SyntheticEvent) => {
     ev.preventDefault()
-    if(inputRef.current?.value === ""){
+    if(!inputRef.current?.value || inputRef.current.value === ""){
       alert(messageOnEmpty)
       return
     }
-    onSubmit(inputRef.current?.value)
+    onSubmit(inputRef.current.value)
   }
 
   return (
